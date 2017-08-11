@@ -224,7 +224,9 @@ bot.dialog('/', [
         
             session.sendTyping();
 
-            session.send("ddddd: " + SFDCLoginUser)
+            //session.send("ddddd: " + SFDCLoginUser)
+
+            session.send("ddddd: ");
 
             
             
