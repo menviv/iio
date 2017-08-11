@@ -243,6 +243,8 @@ bot.dialog('/', [
 
             
             session.userData.UserName = results.response;   
+
+            session.send("ddddd: ");
             
             session.send("שלום לך: " + session.userData.UserName); 
             
