@@ -1,3 +1,42 @@
+
+
+///////// SFDC Module ///////////////////////
+var jsforce = require('jsforce');
+
+
+///////// Time Module ///////////////////////
+var moment = require('moment');
+var DateFormat = "DD-MM-YYYY HH:mm:ss";
+var invDateFormat = "DD-MM-YYYY";
+var LogTimeStame = moment().format(DateFormat); 
+var invTimeStame = moment().format(invDateFormat); 
+
+
+
+///////// DB Module ///////////////////////
+var mongo = require('mongodb');
+var connString = 'mongodb://iio:iio@ds055885.mlab.com:55885/iio';
+var MongoClient = require('mongodb').MongoClient;
+var ObjectID = require('mongodb').ObjectID;
+var dbm;
+var colSettings;
+var colUsers;
+var colLog;
+var colSFDC;
+
+// Initialize connection once
+
+mongo.MongoClient.connect(connString, function(err, database) {
+  if(err) throw err;
+ 
+  dbm = database;
+  colSettings = dbm.collection('Settings');
+  colUsers = dbm.collection('Users');
+  colLog =  dbm.collection('log');
+  colSFDC = dbm.collection('SFDC');
+});
+
+
 /*-----------------------------------------------------------------------------
 To learn more about this template please visit
 https://aka.ms/abs-node-proactive
@@ -66,14 +105,140 @@ bot.dialog('/', function (session) {
 });
 */
 
+
+
+
+
+// Global Settings Variables
+
+var ReturnLowProfileUrl;
+
+    var Terminal;
+    var UserName;
+    var Password;
+    var LowProFileURL;
+    var InvoiceCopyURL;
+    var EmailAddressSFDC; 
+    var AsimonURL;
+    var Operation;
+    var DocTypeToCreate;
+    var ShowCardOwnerPhone;
+    var ShowCardOwnerEmail;
+    var SFDCLoginUser;
+    var SFDCLoginPass_Token;
+    var SFDCEnvironmentURL;
+    var Attempts;
+
+     var Customfield1Label;
+     var Customfield1Value;
+
+     var Customfield2Label;
+     var Customfield2Value;   
+
+     var Customfield3Label;
+     var Customfield3Value;
+
+     var Customfield4Label;
+     var Customfield4Value;
+
+     var Customfield5Label;
+     var Customfield5Value;  
+
+     var HideCVV;
+     var HideCreditCardUserId; 
+    
+    var InvoiceHead_CustName;
+    var InvoiceHead_SendByEmail='true';
+    var InvoiceHead_Language='he';  
+    var InvoiceHead_Email; 
+    var InvoiceHead_Date = invTimeStame; 
+    var InvoiceHead_CustAddresLine1;
+    var InvoiceLines_Price;
+    var InvoiceLines_Description;
+    
+ 
+ 
+ 
+ 
+
+
+// Global Functions ///////
+
+
+    function QuerySettings() {
+ 
+        var cursor = colSettings.find({});
+        var result = [];
+        cursor.each(function(err, doc) {
+            if(err) {
+    
+                throw err;
+                logger.error('Get Settings failure: ' + err);
+    
+            }
+    
+            if (doc === null) {
+                // doc is null when the last document has been processed
+                //res.send(result);
+                
+                 Terminal = result[0].Terminal;
+                 UserName = result[0].UserName;
+                 Password = result[0].Password;
+                 LowProFileURL = result[0].LowProFileURL;
+                 AsimonURL = result[0].AsimonURL;
+                 Operation = result[0].Operation;
+                 DocTypeToCreate = result[0].DocTypeToCreate;
+                 ShowCardOwnerPhone = result[0].ShowCardOwnerPhone;
+                 ShowCardOwnerEmail = result[0].ShowCardOwnerEmail;
+                 SFDCLoginUser = result[0].SFDCLoginUser;
+                 SFDCLoginPass_Token = result[0].SFDCLoginPass_Token;
+                 SFDCEnvironmentURL = result[0].SFDCEnvironmentURL; 
+                 InvoiceCopyURL = result[0].InvoiceCopyURL;
+                 EmailAddressSFDC = result[0].EmailAddressSFDC;
+                 //Attempts  = result[0].Attempts ;
+                 Attempts = parseInt(result[0].Attempts); 
+    
+                 logger.info('Load Settings success');
+        
+                
+                return;
+            }
+            // do something with each doc, like push Email into a results array
+            result.push(doc);
+        });    
+  
+    }
+
+
+
+
+
+
+
+
+
 bot.dialog('/', [
     function (session) {
+
+            QuerySettings();
         
             session.sendTyping();
+
+            session.send("ddddd: " + SFDCLoginUser)
+
+            
             
             builder.Prompts.text(session, "שלום לך, מי את/ה?"); 
 
     }, function (session, results) {
+
+
+
+     //   var conn = new jsforce.Connection({
+            // you can change loginUrl to connect to sandbox or prerelease env.
+     //          loginUrl : SFDCEnvironmentURL
+     //   });
+
             
             session.userData.UserName = results.response;   
             
