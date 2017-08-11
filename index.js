@@ -246,7 +246,7 @@ bot.dialog('/', [
 
             session.send("ddddd: ");
             
-            session.send("שלום לך: " + session.userData.UserName); 
+            session.send("שלום לכם: " + session.userData.UserName); 
             
             builder.Prompts.choice(session, "אז איך אני יכול לעזור לך?", "עדכון תגיות פרופיל|עדכון פרופיל אישי|עדכון פרופיל חברה|רישום לאירוע");            
 
